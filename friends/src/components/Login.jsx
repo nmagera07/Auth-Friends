@@ -2,20 +2,28 @@ import React from 'react';
 import {withFormik, Form, Field} from 'formik'
 import axios from 'axios'
 import * as Yup from 'yup'
+import { Redirect } from 'react-router-dom'
+import {axiosWithAuth} from './authRouter'
 
 const Login = ({ touched, errors}) => {
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        return <Redirect to="/protected" />;
+    }
     return ( 
         <div>
             <Form className="form">
                 <div className="form-group">
-                    <label className="label">Email</label>
+                    <label className="label">Username</label>
                     <Field
                     className="input"
-                    name="email"
-                    type="email"
+                    name="username"
+                    type="text"
                     autoComplete="off"
                     />
-                    <p>{touched.email && errors.email}</p>
+                    <p>{touched.username && errors.username}</p>
                 </div>
                 <div className="form-group">
                     <label className="label">Password</label>
@@ -36,13 +44,12 @@ const Login = ({ touched, errors}) => {
 export default withFormik({
   mapPropsToValues() {
     return {
-      email: "",
+      username: "",
       password: ""
     };
   },
   validationSchema: Yup.object().shape({
-    email: Yup.string()
-      .email()
+    username: Yup.string()
       .required(),
     password: Yup.string()
       .min(6)
@@ -50,15 +57,16 @@ export default withFormik({
   }),
   handleSubmit(values, formikBag) {
     const url =
-      "https://localhost:5000//api/login";
+      "http://localhost:5000/api/login";
     axios
       .post(url, values)
       .then(response => {
-        localStorage.setItem("token", response.data.token);
-        
+        localStorage.setItem("token", response.data.payload)
+        formikBag.props.history.push("/protected")
+        console.log("post data", response.data.payload)
       })
       .catch(e => {
-        console.log(e.response.data);
+        console.log(e.response);
       });
   }
 })(Login);
