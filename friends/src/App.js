@@ -15,7 +15,7 @@ function App() {
         <Link to="/protected">Friends</Link>
       </nav>
       <Route path="/login" component={Login} />
-      <PrivateRoute path="/protected" component={Friends} />
+      <PrivateRoute exact path="/protected" component={Friends} />
       </Router>
     </div>
   );

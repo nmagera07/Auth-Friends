@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {withFormik, Form, Field} from 'formik'
 import axios from 'axios'
-import * as Yup from 'yup'
 import { Redirect } from 'react-router-dom'
 import {axiosWithAuth} from './authRouter'
+import Friend from './Friend'
 
-const Friends = ({ touched, errors}) => {
+
+const Friends = (props) => {
+    const [friends, setFriends] = useState()
+    
 
     useEffect(() => {
          const url =
@@ -13,74 +15,35 @@ const Friends = ({ touched, errors}) => {
     axiosWithAuth()
       .get(url)
       .then(response => {
-        
-        console.log(response.data)
+        setFriends(response.data)
+        console.log("res data",response.data)
       })
       .catch(e => {
         console.log(e.response);
       });
     }, []) 
         
-       
 
+
+    console.log("state data", friends)
     return ( 
         <div>
-            <Form className="form">
-                <div className="form-group">
-                    <label className="label">Name</label>
-                    <Field
-                    className="input"
-                    name="name"
-                    type="text"
-                    autoComplete="off"
-                    />
-                    <p>{touched.name && errors.name}</p>
-                </div>
-                <div className="form-group">
-                    <label className="label">Age</label>
-                    <Field
-                    className="input"
-                    name="age"
-                    type="age"
-                    autoComplete="off"
-                    />
-                    <p>{touched.password && errors.password}</p>
-                </div>
-                <div className="form-group">
-                    <label className="label">Email</label>
-                    <Field
-                    className="input"
-                    name="email"
-                    type="email"
-                    autoComplete="off"
-                    />
-                    <p>{touched.email && errors.email}</p>
-                </div>
-                
-                <button className="btn">Add Friend</button>
-                </Form>
+            {friends ? (
+                friends.map(friend => (
+                <>
+                    <h4>Name: {friend.name}</h4>
+                    <h4>Email: {friend.email}</h4>
+                    <h4>Age: {friend.age}</h4>
+                </>
+                ))
+            ) : (
+                <h1> Loading, please wait</h1>
+            )}
+        
+        <Friend setFriends={setFriends}/>
+            
         </div>
      );
 }
  
-export default withFormik({
-  mapPropsToValues() {
-    return {
-      name: "",
-      age: "",
-      email: "",
-    };
-  },
-  validationSchema: Yup.object().shape({
-    name: Yup.string()
-      .required(),
-    age: Yup.string()
-      .required(),
-    email: Yup.string()
-       .email()
-       .required() ,
-  }),
-  handleSubmit(values, formikBag) {
-    
-  }
-})(Friends);
+export default Friends
