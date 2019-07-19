@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import {axiosWithAuth} from './authRouter'
 import Friend from './Friend'
+import { Card, Icon, } from 'semantic-ui-react'
 
 
 const Friends = (props) => {
@@ -27,19 +28,24 @@ const Friends = (props) => {
 
     console.log("state data", friends)
     return ( 
-        <div>
+        <div className="friends">
+            <div className="friend-list">
             {friends ? (
                 friends.map(friend => (
-                <>
-                    <h4>Name: {friend.name}</h4>
-                    <h4>Email: {friend.email}</h4>
-                    <h4>Age: {friend.age}</h4>
-                </>
+                <Card>
+                    <Card.Content>
+                   <Card.Header><p>Name: {friend.name}</p></Card.Header>
+                   <Card.Description>
+                    <p>Email: {friend.email}</p>
+                    <p>Age: {friend.age}</p>
+                    </Card.Description>
+                    </Card.Content>
+                </Card>
                 ))
             ) : (
                 <h1> Loading, please wait</h1>
             )}
-        
+        </div>
         <Friend setFriends={setFriends}/>
             
         </div>
