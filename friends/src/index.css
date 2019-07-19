@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-nav {
+.nav {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -21,7 +21,7 @@ nav {
   
 }
 
-nav a {
+.nav a {
   color: white;
   text-decoration: none;
 }

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import {axiosWithAuth} from './authRouter'
 import Friend from './Friend'
-import { Card, Icon, } from 'semantic-ui-react'
+import { Card, Icon, Button} from 'semantic-ui-react'
 
 
 const Friends = (props) => {
@@ -23,8 +23,23 @@ const Friends = (props) => {
         console.log(e.response);
       });
     }, []) 
+
+    const deleteFriend = (friends) => {
+        // const url = `http://localhost:5000/api/friends/${friends.id}`
+        // e.preventDefault()
+        axiosWithAuth()
+        .delete(`http://localhost:5000/api/friends/${friends.id}`, friends)
+        .then(response => {
+            setFriends(response.data)
+            console.log("delete friends res data",response)
+            console.log("set friends", )
+        })
+        .catch(e => {
+            console.log(e.response);
+        });
+    } 
         
-    const logout = () => {
+   const logout = () => {
         localStorage.removeItem('token')
         props.history.push('/')
     }
@@ -42,6 +57,7 @@ const Friends = (props) => {
                     <p>Email: {friend.email}</p>
                     <p>Age: {friend.age}</p>
                     </Card.Description>
+                    <Button onClick={e => deleteFriend(e, friends)}>Delete Friend</Button>
                     </Card.Content>
                 </Card>
                 ))
@@ -50,7 +66,7 @@ const Friends = (props) => {
             )}
         </div>
         <Friend setFriends={setFriends}/>
-            <button onClick={logout}>Logout</button>
+        <button onClick={logout}>Logout</button>
         </div>
      );
 }
