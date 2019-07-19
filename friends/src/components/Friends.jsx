@@ -24,7 +24,10 @@ const Friends = (props) => {
       });
     }, []) 
         
-
+    const logout = () => {
+        localStorage.removeItem('token')
+        props.history.push('/')
+    }
 
     console.log("state data", friends)
     return ( 
@@ -43,11 +46,11 @@ const Friends = (props) => {
                 </Card>
                 ))
             ) : (
-                <h1> Loading, please wait</h1>
+                <h3> Loading, please wait</h3>
             )}
         </div>
         <Friend setFriends={setFriends}/>
-            
+            <button onClick={logout}>Logout</button>
         </div>
      );
 }
